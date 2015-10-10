@@ -1,9 +1,10 @@
-﻿$(document).ready(function () {
+﻿
+$(document).ready(function () {
 
     var token = 'GGAQ2BUKIRGJMZMU55YZ';
     var $events = $("#events");
 
-    $.get('https://www.eventbriteapi.com/v3/events/search/?token=' + token + '&organizer.id=8231868522&expand=venue', function (res) {
+    $.get('https://www.eventbriteapi.com/v3/events/search/?token=' + token + '', function (res) {
         if (res.events.length) {
             var s = "<ul class='eventList'>";
             for (var i = 0; i < res.events.length; i++) {
