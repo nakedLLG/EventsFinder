@@ -1,15 +1,22 @@
-﻿jQuery(document).ready(function () {
-    Eventbrite({ 'app_key': "YPOIM2AUNBOTUEFT7H" }, function (eb) {
-        // NEW CODE
-        var eb_options = {
-            'user': 'email@address.abc',
-            'event_statuses': 'live, started'
-        };
-        eb.user_list_events(eb_options, function (response) {
-            // END NEW CODE
-            var eventbrite_list = eb.utils.eventList(response, eb.utils.eventListRow);
-            jQuery("#eventbrite-list").html(eventbrite_list);
-            console.log(response);
-        });
+﻿$(document).ready(function () {
+
+    var token = 'GGAQ2BUKIRGJMZMU55YZ';
+    var $events = $("#events");
+
+    $.get('https://www.eventbriteapi.com/v3/events/search/?token=' + token + '&organizer.id=8231868522&expand=venue', function (res) {
+        if (res.events.length) {
+            var s = "<ul class='eventList'>";
+            for (var i = 0; i < res.events.length; i++) {
+                var event = res.events[i];
+                console.dir(event);
+                s += "<li><a href='" + event.url + "'>" + event.name.text + "</a> - " + event.description.text + "</li>";
+            }
+            s += "</ul>";
+            $events.html(s);
+        } else {
+            $events.html("<p>Sorry, there are no upcoming events.</p>");
+        }
     });
+
+
 });
