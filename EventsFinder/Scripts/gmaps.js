@@ -1,17 +1,37 @@
-﻿function initMap() {
-    var myLatLng = { lat: 56.162, lng: 10.203 };
+﻿var app = app || {};
 
-    // Create a map object and specify the DOM element for display.
-    var map = new google.maps.Map(document.getElementById('map'), {
-        center: myLatLng,
-        scrollwheel: true,
-        zoom: 10
-    });
+(function () {
+    "use strict";
+    function Map() {
+        var map = null;
+        // Create a map object centered with latitude and longitude and specify the DOM element for display.
+        function initMap(latitude, longitude) {
+            map = new google.maps.Map(document.getElementById("map"), {
+                center: { lat: latitude, lng: longitude },
+                scrollwheel: true,
+                zoom: 8
+            });
+        }; //End of initMap()
 
-    // Create a marker and set its position.
-    var marker = new google.maps.Marker({
-        map: map,
-        position: myLatLng,
-        title: 'We are here'
-    });
-}
+        // Create a marker with a name and set its position.
+        function createMarker(latitude, longitude, name) {
+
+            var marker = new google.maps.Marker({
+                map: map,
+                position: { lat: latitude, lng: longitude },
+                title: name
+            });
+
+            return marker;
+        };
+
+        //Revealing module of the class Map
+        return {
+            initMap: initMap,
+            createMarker: createMarker
+        };
+
+    }// End of class Map()
+
+    app.Map = Map;
+}());
