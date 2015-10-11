@@ -14,13 +14,13 @@
             token: 'GGAQ2BUKIRGJMZMU55YZ',
             getEvents: null,
             getVenues: null,
-            venues: []
+            infoWindows: []
 
         };
 
         //Gets the events from EventBrite and push the events inside the EventsList
         var getEvents = function() {
-            combiner.getEvents = $.get('https://www.eventbriteapi.com/v3/events/search/?token=' + combiner.token + '&expand=venue', function (res) {
+            combiner.getEvents = $.get('https://www.eventbriteapi.com/v3/events/search/?token=' + combiner.token + '&q=aarhus&expand=venue', function (res) {
                 if (res.events.length) {
                     res.events.forEach(function (event, i, arr) {
                         combiner.eventsList.push(event);
@@ -46,45 +46,31 @@
 
             combiner.getEvents.done(function () {
                 combiner.eventsList.forEach(function (event, i, arr) {
-                    combiner.markers.push(combiner.map.createMarker(parseFloat(event.venue.latitude), parseFloat(event.venue.longitude), event.name.text));
+                    if (event.venue) {
+
+                        var contentString = '<div id="content">' +
+                      '<div id="siteNotice">' +
+                          '</div>' +
+                              '<h1 id="firstHeading" class="firstHeading">'+event.name.text+'</h1>' +
+                              '<div id="bodyContent">' +
+                                  '<p>' +
+                                    event.description.text + '<a href="' + event.url + '" target="_blank">' +
+                                    'Read More</a> ' +
+                                  '</p>' +
+                              '</div>' +
+                      '</div>';
+
+                        var infowindow = combiner.map.createInfoWindow(contentString);
+                        combiner.infoWindows.push(infowindow);
+                        var marker = combiner.map.createMarker(parseFloat(event.venue.latitude), parseFloat(event.venue.longitude), event.name.text);
+                        combiner.markers.push(marker);
+                        var markerToAttach = combiner.markers[combiner.markers.indexOf(marker)];
+                        var infoWindowToAttach = combiner.infoWindows[combiner.infoWindows.indexOf(infowindow)];
+                        combiner.map.attachInfoWindow(markerToAttach, infoWindowToAttach);
+                    }
                 });
             });
         };
-
-        /*var createMarkers = function () {
-            //Waiting for the response
-            combiner.getEvents.done(function () {
-                //Verifying if there are elements inside the venues
-                if (combiner.venues.length) {
-
-                    //Getting the venue location using the ids
-                    combiner.venues.forEach(function (myVenue, i, arr) {
-                        myVenue.done = $.get('https://www.eventbriteapi.com/v3/venues/:id'+myVenue.venue_id +'/?token=' + combiner.token, function (venue) {
-                            if (venue) {
-                                myVenue.latitude = venue.latitude;
-                                myVenue.longitude = venue.longitude;
-                            } else {
-                                console.log("Sorry, there are no upcoming events.");
-                            }
-                        });
-                    });
-                }else{
-                    console.log("combiner.venues is empty");
-                }
-
-             
-                combiner.eventsList.forEach(function (event, i, arr) {
-                    combiner.venues.forEach(function (venue, i, arr) {
-                        venue.done(function(){
-                           if(venue.event_id == event.event_id){
-                               combiner.markers.push(combiner.map.createMarker(venue.latitude, venue.longitude, event.name.text));
-                           }
-                        });
-                    });
-                });
-            });
-
-        };*/
 
         initAll();
     }

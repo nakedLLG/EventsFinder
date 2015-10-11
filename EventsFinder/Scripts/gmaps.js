@@ -9,7 +9,7 @@
             map = new google.maps.Map(document.getElementById("map"), {
                 center: { lat: latitude, lng: longitude },
                 scrollwheel: true,
-                zoom: 8
+                zoom: 14
             });
         }; //End of initMap()
 
@@ -19,16 +19,30 @@
             var marker = new google.maps.Marker({
                 map: map,
                 position: { lat: latitude, lng: longitude },
-                title: name
+                title: name,
             });
 
             return marker;
         };
 
+        function createInfoWindow(text) {
+            var infowindow = new google.maps.InfoWindow({ content: text });
+            return infowindow;
+        };
+
+        function attachInfoWindow(marker, infowindow) {
+            marker.addListener('click', function() {
+                infowindow.open(map, marker);
+            });
+        }
+
+
         //Revealing module of the class Map
         return {
             initMap: initMap,
-            createMarker: createMarker
+            createMarker: createMarker,
+            createInfoWindow: createInfoWindow,
+            attachInfoWindow: attachInfoWindow
         };
 
     }// End of class Map()
