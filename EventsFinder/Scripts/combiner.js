@@ -19,11 +19,11 @@
 
         //Gets the events from EventBrite and push the events inside the EventsList
         var getEvents = function() {
-            combiner.getEvents = $.get('https://www.eventbriteapi.com/v3/events/search/?token=' + combiner.token + '&expand=venue&venue.city=aarhus&location.within=100km', function (res) {
+            combiner.getEvents = $.get('https://www.eventbriteapi.com/v3/events/search/?token=' + combiner.token + '&expand=venue&venue.country='+ value +'&venue.city=aarhus', function (res) {
                 if (res.events.length) {
                     res.events.forEach(function (event, i, arr) {
                         combiner.eventsList.push(event);
-                        //console.dir(event);
+                        console.dir(event);
                     });
                 } else {
                     console.log("Sorry, there are no upcoming events.");
@@ -46,18 +46,19 @@
             combiner.getEvents.done(function () {
                 combiner.eventsList.forEach(function (event, i, arr) {
                     if (event.venue) {
-
-                        var contentString = '<div id="content">' +
-                      '<div id="siteNotice">' +
-                          '</div>' +
-                              '<h1 id="firstHeading" class="firstHeading">'+event.name.text+'</h1>' +
-                              '<div id="bodyContent">' +
-                                  '<p>' +
-                                    event.description.text + '<a href="' + event.url + '" target="_blank">' +
+                        var shortDescription = event.description.text.substring(0, 200);
+                        var contentString =
+                        '<div id="content">' +
+                            '<div id="siteNotice">' +
+                            '</div>' +
+                            '<h2 id="firstHeading" class="firstHeading">'+event.name.text+'</h2>' +
+                            '<div id="bodyContent">' +
+                                '<p>' +
+                                    shortDescription + ' ... <a href="' + event.url + '" target="_blank">' +
                                     'Read More</a> ' +
-                                  '</p>' +
-                              '</div>' +
-                      '</div>';
+                                '</p>' +
+                            '</div>' +
+                        '</div>';
                         var infowindow = combiner.map.createInfoWindow(contentString);
                         combiner.infoWindows.push(infowindow);
                         var marker = combiner.map.createMarker(parseFloat(event.venue.latitude), parseFloat(event.venue.longitude), event.name.text);
