@@ -8,7 +8,6 @@
 
         var combiner = {
             map: null,
-            theMap: null,
             events: null,
             eventsList: [],
             markers: [],
@@ -19,7 +18,7 @@
 
         //Gets the events from EventBrite and push the events inside the EventsList
         var getEvents = function() {
-            combiner.getEvents = $.get('https://www.eventbriteapi.com/v3/events/search/?token=' + combiner.token + '&expand=venue&venue.country='+ value +'&venue.city=aarhus', function (res) {
+            combiner.getEvents = $.get('https://www.eventbriteapi.com/v3/events/search/?token=' + combiner.token + '&expand=venue&venue.country=DK&venue.city=aarhus', function (res) {
                 if (res.events.length) {
                     res.events.forEach(function (event, i, arr) {
                         combiner.eventsList.push(event);
@@ -31,14 +30,18 @@
             });
         }; // End of getEvents()
         var initAll = function () {
-            initMap();
             getEvents();
-            createMarkers();
+            initMap();
+            createMarkers();           
         };
 
         var initMap = function () {
-            combiner.map = new app.Map();
-            combiner.map.initMap(56.157, 10.211);
+            combiner.getEvents.done(function () { 
+                console.log(combiner.eventsList[0]);
+                combiner.map = new app.Map();
+                combiner.map.initMap();
+                combiner.map.fitTheMap();
+            });
         };
 
         var createMarkers = function () {

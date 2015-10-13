@@ -4,24 +4,23 @@
     "use strict";
     function Map() {
         var map = null;
+        var markerBounds = new google.maps.LatLngBounds();
         // Create a map object centered with latitude and longitude and specify the DOM element for display.
-        function initMap(latitude, longitude) {
+        function initMap() {
             map = new google.maps.Map(document.getElementById("map"), {
-                center: { lat: latitude, lng: longitude },
-                scrollwheel: true,
-                zoom: 12
+                scrollwheel: true
             });
         }; //End of initMap()
 
         // Create a marker with a name and set its position.
         function createMarker(latitude, longitude, name) {
-
+            var latlng = new google.maps.LatLng(latitude, longitude);
             var marker = new google.maps.Marker({
                 map: map,
-                position: { lat: latitude, lng: longitude },
-                title: name,
+                position: latlng,
+                title: name
             });
-
+            markerBounds.extend(latlng);
             return marker;
         };
 
@@ -31,18 +30,23 @@
         };
 
         function attachInfoWindow(marker, infowindow) {
-            marker.addListener('click', function() {
+            marker.addListener('click', function () {
                 infowindow.open(map, marker);
             });
-        }
+        };
 
+        function fitTheMap() {
+            map.fitBounds(markerBounds);
+            map.setCenter(markerBounds.getCenter());
+        };
 
         //Revealing module of the class Map
         return {
             initMap: initMap,
             createMarker: createMarker,
             createInfoWindow: createInfoWindow,
-            attachInfoWindow: attachInfoWindow
+            attachInfoWindow: attachInfoWindow,
+            fitTheMap: fitTheMap
         };
 
     }// End of class Map()
