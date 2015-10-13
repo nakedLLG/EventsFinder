@@ -19,7 +19,7 @@
 
         //Gets the events from EventBrite and push the events inside the EventsList
         var getEvents = function() {
-            combiner.getEvents = $.get('https://www.eventbriteapi.com/v3/events/search/?token=' + combiner.token + '&expand=venue&venue.city=aarhus', function (res) {
+            combiner.getEvents = $.get('https://www.eventbriteapi.com/v3/events/search/?token=' + combiner.token + '&expand=venue&venue.city=aarhus&location.within=100km', function (res) {
                 if (res.events.length) {
                     res.events.forEach(function (event, i, arr) {
                         combiner.eventsList.push(event);
@@ -58,7 +58,6 @@
                                   '</p>' +
                               '</div>' +
                       '</div>';
-
                         var infowindow = combiner.map.createInfoWindow(contentString);
                         combiner.infoWindows.push(infowindow);
                         var marker = combiner.map.createMarker(parseFloat(event.venue.latitude), parseFloat(event.venue.longitude), event.name.text);
