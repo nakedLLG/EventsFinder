@@ -3,6 +3,7 @@
 (function () {
     "use strict";
 
+    //This class combines google maps API (gmaps.js) with other APIs to get events
     function Combiner() {
 
         var combiner = {
@@ -11,20 +12,18 @@
             events: null,
             eventsList: [],
             markers: [],
+            infoWindows: [],
             token: 'GGAQ2BUKIRGJMZMU55YZ',
-            getEvents: null,
-            getVenues: null,
-            infoWindows: []
-
+            getEvents: null
         };
 
         //Gets the events from EventBrite and push the events inside the EventsList
         var getEvents = function() {
-            combiner.getEvents = $.get('https://www.eventbriteapi.com/v3/events/search/?token=' + combiner.token + '&q=aarhus&expand=venue', function (res) {
+            combiner.getEvents = $.get('https://www.eventbriteapi.com/v3/events/search/?token=' + combiner.token + '&expand=venue&venue.city=aarhus', function (res) {
                 if (res.events.length) {
                     res.events.forEach(function (event, i, arr) {
                         combiner.eventsList.push(event);
-                        console.dir(event);
+                        //console.dir(event);
                     });
                 } else {
                     console.log("Sorry, there are no upcoming events.");

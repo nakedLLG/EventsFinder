@@ -9,7 +9,7 @@
             map = new google.maps.Map(document.getElementById("map"), {
                 center: { lat: latitude, lng: longitude },
                 scrollwheel: true,
-                zoom: 14
+                zoom: 12
             });
         }; //End of initMap()
 
