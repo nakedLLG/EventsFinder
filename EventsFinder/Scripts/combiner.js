@@ -29,6 +29,7 @@
                 }
             });
         }; // End of getEvents()
+
         var initAll = function () {
             getEvents();
             initMap();
@@ -45,7 +46,6 @@
         };
 
         var createMarkers = function () {
-
             combiner.getEvents.done(function () {
                 combiner.eventsList.forEach(function (event, i, arr) {
                     if (event.venue) {
